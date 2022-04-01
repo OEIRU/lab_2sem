@@ -1,159 +1,128 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 using namespace std;
-float number;
-int step;
-float number2;
-int step2;
-float number3;
-int step3;
  
-struct polinomP { float data; float power; polinomP* next; } *S;
-void Read_polinomP(polinomP* S) // функция формирования списка
-{
-    polinomP* t;
-    t = S;
+/*ОБЪЯВЛЕНИЕ СТРУКТУРЫ*/
+struct Queue { int x; //информационный элемент
+    Queue *Tail, *Head, *Next; //Голова очереди и указатель на следующий элемент
+};
  
-    ifstream F;
-    F.open("file1.txt");
- 
-    if (!F.is_open())
-    {
-        cout << "Ошибка откытия файла" << endl;
-    }
-    else {
-        cout << "Файл открыт" << endl;
- 
-        while (!F.eof())
-        {
-            F >> number; // заглавное звено
-            t->next = new polinomP;
-            t = t->next;
- 
-            t->data = number;
-            t->power = step++;
-        }
- 
-        t->next = new polinomP;
-        t = t->next;
- 
-        t->data = number;
-        t->power = step++;
-        t->next = NULL;
-    }
-    F.close();
-}
- 
-struct polinomQ { float data2; float power2; polinomQ* next; } *S2;
-void Read_polinomQ(polinomQ* S2) { // функция формирования списка 
-    polinomQ* t2;
-    t2 = S2;
-    ifstream F2;
-    F2.open("file2.txt");
- 
-    if (!F2.is_open())
-    {
-        cout << "Ошибка откытия файла" << endl;
-    }
-    else {
-        cout << "Файл открыт" << endl;
- 
-        while (!F2.eof())
-        {
-            F2 >> number2; // заглавное звено
-            t2->next = new polinomQ;
-            t2 = t2->next;
-            t2->data2 = number2;
-            t2->power2 = step2++;
-        }
- 
-        t2->next = new polinomQ;
-        t2 = t2->next;
-        t2->data2 = number2;
-        t2->power2 = step2++;
-        t2->next = NULL;
-    }
-    F2.close();
-}
-struct polinomR { float data; float number3; int power;  polinomR* next; } *S3;
-void Sum(polinomR* S3) {
-    polinomP* t;
-    polinomQ* t2;
-    polinomR* t3;
-    ofstream fout("sum.txt", ios_base::app);
-    for (t = S, t2 = S2, t3 = S3; t->next != NULL && t2->next != NULL; t = t->next, t2 = t2->next) {
- 
-        if ((t->data + t2->data2) != 0)
-        {
-            t3->next = new polinomR;
-            t3 = t3->next;
-            t3-> data = (t->data + t2->data2);
-            t->power;
-            fout << t->power << "| " << t3->data << endl;
- 
-        }
-        else
-        {
-            fout << endl;
-        }
+/*ФУНКЦИЯ ДОБАВЛЕНИЯ ЭЛЕМЕНТА В очередь */
+void Push(int x, Queue *&MyQueue){ 
+//Принимаем элемент очереди и указатель на очередь, при этом говорим, что принимаемый указатель будет сам по себе указателем
+    
+    Queue *element = new Queue; //Выделяем память для нового элемента
+    element->x = x; //Записываем в поле x принимаемый в функцию элемент x
+    element->Tail = NULL;
+    if (MyQueue->Head == NULL)
+        MyQueue->Head = MyQueue->Next = element;
+    else{
+        //Сдвигаем хвост на позицию вперед
+        (MyQueue->Next)->Tail = element;
+        MyQueue->Next = element;
     }
 }
  
-void Print(polinomP* S, polinomQ* S2)
-{
-    ofstream fout("file3.txt", ios_base::app);
-    polinomP* t;
-    fout << "polynom P" << endl;
-    for (t = S->next; t->next != NULL; t = t->next)
-    {
-        fout << t->power << "| " << t->data << endl;
+/*ФУНКЦИЯ ОТОБРАЖЕНИЯ очереди*/
+void Show(Queue *MyQueue){ //Нужна только сама очередь
  
+    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
+    //с помощью цикла проходим по всему стеку
+    while (temp != NULL){ //выходим при встрече с пустым полем
+        cout << temp->x << " "; //Выводим на экран элемент очереди
+        temp = temp->Tail; //Переходим к следующему элементу
     }
-    fout << endl;
-    polinomQ* t2;
-    fout << "polynom Q" << endl;
-    for (t2 = S2->next; t2->next != NULL; t2 = t2->next)
-    {
-        fout << t2->power2 << "| " << t2->data2 << endl;
-    }
-    fout << endl;
-}
-int main()
-{
-    setlocale(LC_ALL, "RUS");
-    S = new polinomP;
-    S2 = new polinomQ;
-    S3 = new polinomR;  
-    Read_polinomP(S);
-    Read_polinomQ(S2);
-    Sum(S3);
-    Print(S, S2);
+        cout << endl; 
 }
  
-/*
-* file1.txt
-* 2 3 4 5
-* 
-* file2.txt
-* 5 6 7 8
-* 
-* file3.txt
-* polynom P
-* 0| 2
-* 1| 3
-* 2| 4
-* 3| 5
-*
-* polynom Q
-* 0| 5
-* 1| 6
-* 2| 7
-* 3| 8
-*
-* sum.txt
-* 0| 7
-* 1| 9
-* 2| 11
-* 3| 13
-*/
+/*ФУНКЦИЯ УДАЛЕНИЯ ОЧЕРЕДИ ИЗ ПАМЯТИ*/
+void ClearQueue(Queue *MyQueue){
+    while (MyQueue->Head != NULL){ //Пока по адресу не пусто
+    
+        Queue *temp = MyQueue->Head->Tail; //Временная переменная для хранения адреса следующего элемента
+        delete MyQueue->Head; //Освобождаем адрес обозначающий начало
+        MyQueue->Head = temp; //Меняем адрес на следующий
+    }
+}
+ 
+/*ФУНКЦИЯ УБАВЛЕНИЯ ЭЛЕМЕНТА ИЗ очереди */
+void Pop(Queue *MyQueue){
+    if (MyQueue->Head != NULL){ //Пока по адресу не пусто
+        Queue *temp = MyQueue->Head->Tail; //Временная переменная для хранения адреса следующего элемента
+        MyQueue->Head = temp; //Меняем адрес на следующий
+    }
+    
+}
+ 
+/*ЗАПОЛНЕНИЕ ИЗ ЦИКЛА*/
+void CreateQueue(Queue *MyQueue){
+    MyQueue->Head = NULL; //Во избежание ошибок инициализируем первый элемент
+    for (int i = -2; i<10; i++) 
+        Push(i, MyQueue); //Заносим данные в очередь
+}
+ 
+/*УДАЛЕНИЕ ЭЛЕМЕНТОВ"*/
+void DeleteNegative(Queue *MyQueue){
+    int count=0;
+    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
+    //с помощью цикла проходим по всему стеку
+    while (temp != NULL){
+        temp = temp->Tail;
+    }
+    temp = MyQueue->Head;
+    Pop(MyQueue);
+ 
+/*ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ*/
+void AddNegative (Queue *MyQueue) {
+    int count=0;
+    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
+    //с помощью цикла проходим по всему стеку
+    while (temp != NULL){
+        count++;
+        temp = temp->Tail;
+    }
+    temp = MyQueue->Head;
+    Push(42, MyQueue);
+    temp = temp->Tail;
+}
+ 
+/*ПРОВЕРКА НА ПУСТОТУ*/
+void Checkman(Queue *MyQueue){
+    int count=0;
+    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
+    //с помощью цикла проходим по всему стеку
+    while (temp != NULL){
+        count++;
+        temp = temp->Tail;
+    }
+    temp = MyQueue->Head;
+ 
+    for (int j = 0; j < count; j++){
+    if (temp->x = 0) {continue;}
+    else {cout << "Не пуст!" << endl;break;}
+    }
+}
+ 
+int main(){
+    Queue *MyQueue = new Queue; //Выделяем память для очереди
+ 
+    CreateQueue(MyQueue); //Инициализируем очередь
+    cout << "Проверили на пустоту" << endl;
+    Checkman(MyQueue);
+    
+    cout << "Создали список" << endl;
+    Show(MyQueue); //Выводим очередь на экран
+ 
+    DeleteNegative(MyQueue);
+    cout << "Удалили элемент" << endl; // вопросик: удалять по индексу, или по значению? 
+    Show(MyQueue);
+ 
+    AddNegative(MyQueue);
+    cout << "Добавили элемент" << endl;
+    Show(MyQueue);
+ 
+    ClearQueue(MyQueue); //Очищаем память.
+    delete MyQueue->Head;
+    delete MyQueue;
+    cout << "Память очищена" << endl;
+}
