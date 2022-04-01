@@ -1,12 +1,10 @@
+#include <stack.h>
 #include <stdio.h>
 #include <fstream>
 #include <string>
 using namespace std;
- 
-struct list{int el; list *next; list *pred};
-struct queue{list *beg, *end;};
-    ofstream fout("output.txt", ios_base::app);
- 
+
+
 void putToQueue(queue *q, int iEl)   //добавить в очередь
 {
     list *tmp;
@@ -33,14 +31,7 @@ int takeFromQueue(queue *q, int *iEl) // взять из очереди
 }
  
  
-queue *CreateQueue()            //создать очередь
-{
-    queue *q;
-    q = new queue;
-    q->beg = NULL;
-    q->end = NULL;
-    return q;
-}
+
  
 int isQueueEmpty(queue *q)      //проверка очереди на пустоту
 {
@@ -82,15 +73,13 @@ void PrintQueue(queue *q)       //вывести очередь на экран
     }
     fout << endl;
 }
- 
-int main()
-{
+
+void PrintFile() {
     int i;
     queue *q = CreateQueue();
-    fout << (".......Put Elems..............") << endl; 
     ifstream F;
     F.open("input.txt");
- 
+
     if (!F.is_open())
     {
         fout << "Файл не открылся! Проверь название/существование" << endl;
@@ -104,35 +93,5 @@ int main()
             putToQueue(q, i);
             PrintQueue(q);
         }
-    {
-        putToQueue(q, i);
-        PrintQueue(q);
     }
-    }
-    fout << ("\n......Take Elems...............") << endl;
-    fout << endl;
-    PrintQueue(q);
-    while(!isQueueEmpty(q))
-    {
-        takeFromQueue(q, &i);
-        PrintQueue(q);
-    }
-    fout << ("\n........Put Elems.............") << endl;
-    for(i=30; i<35; i++)
-    {
-        putToQueue(q, i);
-        PrintQueue(q);
-    }
-    fout << ("\n........Clear queue.............") << endl;
-    ClearQueue(q);
-    PrintQueue(q);
 }
- 
- /*
- Что же пишут в газетах в разделе «Из зала суда»?
-Приговор приведен в исполненье. Взглянувши сюда,
-обыватель узрит сквозь очки в оловянной оправе,
-как лежит человек вниз лицом у кирпичной стены;
-но не спит. Ибо брезговать кумполом сны
-продырявленным вправе.  
-*/
