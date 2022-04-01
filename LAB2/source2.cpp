@@ -1,10 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 using namespace std;
- 
- ifstream F;
- ifstream F2; 
  
 /*ОБЪЯВЛЕНИЕ СТРУКТУРЫ*/
 struct Queue { int x; //информационный элемент
@@ -12,25 +8,31 @@ struct Queue { int x; //информационный элемент
 };
  
 /*ФУНКЦИЯ ДОБАВЛЕНИЯ ЭЛЕМЕНТА В очередь */
-void Push(int x, Queue *&MyQueue){ 
+void Push(Queue *&MyQueue){ 
 //Принимаем элемент очереди и указатель на очередь, при этом говорим, что принимаемый указатель будет сам по себе указателем
- 
-    element->x = x; //Записываем в поле x принимаемый в функцию элемент x
-    element->Tail = NULL;
-    if (MyQueue->Head == NULL)
-        MyQueue->Head = MyQueue->Next = element;
-    else{
-        //Сдвигаем хвост на позицию вперед
-        (MyQueue->Next)->Tail = element;
-        MyQueue->Next = element;
-    }
+    int x;
+    ifstream fin;
+    fin.open("input.txt");
+    while (!fin.eof())
+    {
+        fin >> x;                   
+        Queue *element = new Queue; //Выделяем память для нового элемента
+        element->x = x; //Записываем в поле x принимаемый в функцию элемент x
+        element->Tail = NULL;
+        if (MyQueue->Head == NULL)
+            MyQueue->Head = MyQueue->Next = element;
+        else{
+            //Сдвигаем хвост на позицию вперед
+            (MyQueue->Next)->Tail = element;
+            MyQueue->Next = element;
+        }
+    }        
 }
  
 /*ФУНКЦИЯ ОТОБРАЖЕНИЯ очереди*/
 void Show(Queue *MyQueue){ //Нужна только сама очередь
  
     ofstream fout ("output.txt", ios_base::app);
-    //fout.open("output.txt");
     Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
     //с помощью цикла проходим по всему стеку
     while (temp != NULL){ //выходим при встрече с пустым полем
@@ -51,25 +53,13 @@ void ClearQueue(Queue *MyQueue){
 }
  
 /*ФУНКЦИЯ УБАВЛЕНИЯ ЭЛЕМЕНТА ИЗ очереди */
-void Pop(Queue *MyQueue){   
+void Pop(Queue *MyQueue){
     if (MyQueue->Head != NULL){ //Пока по адресу не пусто
         Queue *temp = MyQueue->Head->Tail; //Временная переменная для хранения адреса следующего элемента
         MyQueue->Head = temp; //Меняем адрес на следующий
     }
  
 }
- 
-/*ЗАПОЛНЕНИЕ ИЗ ЦИКЛА*/
-void CreateQueue(Queue *MyQueue){
-    F.open("input.txt");
-    Queue *element = new Queue;
-    while (!fin.eof())
-    {
-        fin >> element;
-        push(element, myQueue); // заглавное звено
-    } 
-    //ifstream fin("input.txt", ios_base::app);//Выделяем память для нового элемента
- 
  
 /*УДАЛЕНИЕ ЭЛЕМЕНТОВ"*/
 void DeleteNegative(Queue *MyQueue){
@@ -81,7 +71,7 @@ void DeleteNegative(Queue *MyQueue){
     }
     temp = MyQueue->Head;
     Pop(MyQueue);
-}
+}        
  
 /*ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ*/
 void AddNegative (Queue *MyQueue) {
@@ -93,7 +83,7 @@ void AddNegative (Queue *MyQueue) {
         temp = temp->Tail;
     }
     temp = MyQueue->Head;
-    Push(42, MyQueue);
+    Push(MyQueue);
     temp = temp->Tail;
 }
  
@@ -117,7 +107,7 @@ void Checkman(Queue *MyQueue){
 int main(){
     Queue *MyQueue = new Queue; //Выделяем память для очереди
  
-    CreateQueue(MyQueue); //Инициализируем очередь
+    Push(MyQueue); //Инициализируем очередь
     cout << "Проверили на пустоту" << endl;
     Checkman(MyQueue);
  
