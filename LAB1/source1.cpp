@@ -4,11 +4,11 @@
 int main() {
     struct list {
         list* next;
-        char elem;
-        int number;
+        float elem;
+        int ch;
     }
-    list * ph; * num; // не объявляется num
-    list* p, * p2, * p3, * counter;
+    list * ph; * num; // ЭТО ВСЕГО ЛИШЬ СПИСКИ
+    list* p, * p2;
     // p - первый полином
     // p2 - второй полином
     // p3 - сумма полиномов 
@@ -20,40 +20,25 @@ int main() {
     fopen_s(&f, "input.txt", "r");
  
     {ph = new list; // объявление ph главным звеном
-    fscanf_s(f, "%c", &ch);
+    fscanf_s(f, "%c", &ch); 
     ph->next = NULL; // next - прямая ссылка
     num->next = NULL;
     p = ph; // сделать p заглавным звеном (заготовка для продвижения)
-    counter = num; // num - считать
-    while ((ch = getchar()) != '\n') {
-        p->next = new list; // Создание очеревдного звена (продвижение)
-        counter->next = new list;
-        p = p->next; // p присваиваем ссылку на очередное звено (действие на ячейку)
-        counter = counter->next;
-        p->elem = ch; // elem присваиваем значение символа ch (действие на содержание ячейки)
-        counter->number = i++;
+ 
+    for (int i = 0; i < 2; i++){
+    while ((ch != '\n') {
+        p[i]->next = new list; // Создание очеревдного звена (продвижение)
+        p[i] = p[i]->next; // p присваиваем ссылку на очередное звено (действие на ячейку)
+        p[i]->elem = ch; // elem присваиваем значение символа ch (действие на содержание ячейки)
         scanf(f, "%c", &ch);
     }
-    p2 = p->next;
-    p = NULL;
- 
-    int i = 0; //  обнулить
-    while ((ch = getchar()) != '\n') {
-        p2->next = new list; // повторение создания заглавного звена? 
-        counter->next = new list;
-        p2 = p2->next;
-        counter = counter->next;
-        p2->elem = ch;
-        counter->number = i++;
-        scanf(f, "%c", &ch);
+    p[i] = p[i]->next;
+    p[i] = NULL;
     }
-    
-        // степень n[i] = n[0] - истинная степень
  
-    p2->next = NULL;
-    list * ph2;
+    list  *ph2;
     for (p = ph, p2 = ph2; p != NULL, p2 != NULL; p = p->next, p2 = p2->next) {
-        p3 -> (p + p2);
+        p3 -> (p + p2); // бред какой-то 
         p3 = p3->next;
         // вывод в формате 
         // p1 = 2x^3 + 3x^2 + 2x + 6
@@ -69,4 +54,4 @@ int main() {
     }
     }
     return 0;
-}
+}   
