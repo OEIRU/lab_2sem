@@ -2,79 +2,133 @@
 #include <fstream>
 #include <string>
 using namespace std;
+float number;
+float number2;
+float number3;
  
-double number;
-struct elems { double data; elems *next; } *S;
-void Make_elems(elems *S) // функция формирования списка
+struct polinomP { float data; float power; polinomP* next; } *S;
+void Read_polinomP(polinomP* S) // функция формирования списка
 {
-    elems *t;
+    polinomP* t;
     t = S;
-    t2; \\ 
-    t3; \\ 
-    counter; \\ 
  
     ifstream F;
     F.open("file1.txt");
  
     if (!F.is_open())
-    {
-        cout << "Ошибка откытия файла" << endl;
-    }
-    else
-    {
+    { cout << "Ошибка откытия файла" << endl; }
+    else {
         cout << "Файл открыт" << endl;
-        for // посчитать 2 раза
-        while (ch != '\n')
+ 
+        while (!F.eof())
         {
-            F >> number;
-            t->next = new elems;
-            t = t->next;                
-            t->data = number;           
+            F >> number; // заглавное звено
+            t->next = new polinomP;
+            t = t->next;
+ 
+            t->data = number;
+            t->power = number; 
         }
-        
-        t->next = new elems;
+ 
+        t->next = new polinomP; 
         t = t->next;
+ 
         t->data = number;
+        t->power = number;
         t->next = NULL;
-        
     }
     F.close();
- 
 }
  
-void Count(elems *S, double number)
-{
-    elems *t;
-    for (t1 = S, t2 = S2; t1->next->next != NULL, t1->next->next != NULL; t1 = t1->next, t2->next)
-    {
-        t1->next->data -= number;
-        t3 = t1 + t2; 
-        t3 = t3 -> next; 
-        
+struct polinomQ { float data; float number2; polinomQ* next; } *S2;
+void Read_polinomQ(polinomQ* S2) { // функция формирования списка 
+    polinomQ* t2;
+    t2 = S2;
+    ifstream F2;
+    F2.open("file2.txt");
+ 
+    if (!F2.is_open())
+    { cout << "Ошибка откытия файла" << endl; }
+    else {
+        cout << "Файл открыт" << endl;
+ 
+        while (!F2.eof())
+        {
+            F2 >> number2; // заглавное звено
+            t2->next = new polinomQ;
+            t2 = t2->next;
+            t2->data = number2;
+        }
+ 
+        t2->next = new polinomQ;
+        t2 = t2->next;
+        t2->data = number2;
+ 
+        t2->next = NULL;
     }
-    if (t1->next->next == NULL, t2->next->next == NULL)
-    { t->next = NULL; }
+    F2.close();
+}
+struct polinomR { float data; float number3;  polinomR* next;} *S3;
+void Sum(polinomR* S3) {
+    polinomP *t;
+    polinomQ *t2;
+    polinomR *t3;
+    for (t = S, t2 = S2, t3 = S3; t->next != NULL && t2->next != NULL; t = t->next, t2 = t2->next) {
+        if ((t->data + t2->data) != 0)
+        {
+ 
+ 
+            t3->next = new polinomR;
+            t3 = t3->next;
+            t3->data = (t->data + t2->data);
+            t->power
+        }
+        else
+        {
+            t3 = 000;
+        }
+    }
 }
  
-void Print(elems* S)
+void Print(polinomP* S, polinomQ* S2, polinomR *S3)
 {
-    ofstream fout("file1.txt", ios_base::app);
-    elems *t;
+    ofstream fout("file3.txt", ios_base::app);
+    polinomP* t;
+    fout << "polynom P" << endl;
+    for (t = S->next; t->next != NULL; t = t->next)
+    {
+        fout << t->data << " " << t->power << "| ";
+ 
+    }
     fout << endl;
-    for (t3 = S->next; t3->next != NULL; t = t->next)
+    polinomQ* t2;
+    fout << "polynom Q" << endl;
+    for (t2 = S2->next; t2->next != NULL; t2 = t2->next)
     {
-        fout << t->data << " ";
-        // обозначить for для красивого "x^n"
+        fout << t2->data << " ";
+    }
+    fout << endl;
+    polinomR* t3;
+    fout << "polinomR" << endl;
+    for (t3 = S3->next; t3->next != NULL; t3 = t3->next)
+    {
+        if (t != 000) {
+            fout << t3->data << " ";
+            }
+        else {
+            fout << " ";
+        }
     }
 }
- 
-int main() 
+int main()
 {
     setlocale(LC_ALL, "RUS");
-    S1 = new elems;
-    Make_elems(S1, S2);
-    Count(S, number);
-    Print(S);
+    S = new polinomP;
+    S2 = new polinomQ;
+    S3 = new polinomR;
+    Read_polinomP(S);
+    Read_polinomQ(S2);
+    Sum(S3);
+    Print(S, S2, S3);
 }
  
-// паста с угрозами
