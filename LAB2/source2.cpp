@@ -2,93 +2,64 @@
 #include <fstream>
 #include <string>
 using namespace std;
- 
- ifstream F;
- int number;
- 
-/*ОБЪЯВЛЕНИЕ СТРУКТУРЫ*/
-struct Queue { int x; //информационный элемент
-    Queue *Tail, *Head, *Next; //Голова очереди и указатель на следующий элемент
-};
- 
-/*ФУНКЦИЯ ДОБАВЛЕНИЯ ЭЛЕМЕНТА В очередь */
-void Push(int x, Queue *&MyQueue){ 
-//Принимаем элемент очереди и указатель на очередь, при этом говорим, что принимаемый указатель будет сам по себе указателем
+    ifstream F;
+    int number;
+struct Queue { int x; Queue *Tail, *Head, *Next;}; // объявление структуры
+void Push(int x, Queue *&MyQueue){  // добавление элемента в очередь
     Queue *element = new Queue; 
-    element->x = x; //Записываем в поле x принимаемый в функцию элемент x
+    element->x = x; 
     element->Tail = NULL;
     if (MyQueue->Head == NULL)
         MyQueue->Head = MyQueue->Next = element;
     else{
-        //Сдвигаем хвост на позицию вперед
         (MyQueue->Next)->Tail = element;
         MyQueue->Next = element;
     }
 }
- 
-/*ФУНКЦИЯ ОТОБРАЖЕНИЯ очереди*/
-void Show(Queue *MyQueue){ //Нужна только сама очередь
+void Show(Queue *MyQueue){ // функция вывода списка в файл 
  
     ofstream fout ("output.txt", ios_base::app);
-    //fout.open("output.txt");
-    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
-    //с помощью цикла проходим по всему стеку
-    while (temp != NULL){ //выходим при встрече с пустым полем
-        fout << temp->x << " "; //Выводим в файл элемент очереди
-        temp = temp->Tail; //Переходим к следующему элементу
+    Queue *temp = MyQueue->Head; 
+    while (temp != NULL){ 
+        fout << temp->x << " "; 
+        temp = temp->Tail; 
     }
         fout << endl; 
 }
+void ClearQueue(Queue *MyQueue){ // функция удаления из памяти
+    while (MyQueue->Head != NULL){ 
  
-/*ФУНКЦИЯ УДАЛЕНИЯ ОЧЕРЕДИ ИЗ ПАМЯТИ*/
-void ClearQueue(Queue *MyQueue){
-    while (MyQueue->Head != NULL){ //Пока по адресу не пусто
- 
-        Queue *temp = MyQueue->Head->Tail; //Временная переменная для хранения адреса следующего элемента
-        delete MyQueue->Head; //Освобождаем адрес обозначающий начало
-        MyQueue->Head = temp; //Меняем адрес на следующий
+        Queue *temp = MyQueue->Head->Tail;
+        delete MyQueue->Head; 
+        MyQueue->Head = temp; 
     }
 }
- 
-/*ФУНКЦИЯ УБАВЛЕНИЯ ЭЛЕМЕНТА ИЗ очереди */
-void Pop(Queue *MyQueue){   
-    if (MyQueue->Head != NULL){ //Пока по адресу не пусто
-        Queue *temp = MyQueue->Head->Tail; //Временная переменная для хранения адреса следующего элемента
-        MyQueue->Head = temp; //Меняем адрес на следующий
+void Pop(Queue *MyQueue){ // функция удаления элемента  
+    if (MyQueue->Head != NULL){ 
+        Queue *temp = MyQueue->Head->Tail; 
+        MyQueue->Head = temp; 
     }
  
 }
- 
-/*ЗАПОЛНЕНИЕ ИЗ ЦИКЛА*/
-void CreateQueue(Queue *MyQueue){
+void CreateQueue(Queue *MyQueue){ // ввод из файла
     ifstream fin("input.txt");
     Queue *element = new Queue;
-    while (!fin.eof())
-    {
+    while (!fin.eof()){
         fin >> number;
-        Push(number, MyQueue); // заглавное звено
+        Push(number, MyQueue); 
     } 
 }
- 
-    //ifstream fin("input.txt", ios_base::app);//Выделяем память для нового элемента
- 
- 
-/*УДАЛЕНИЕ ЭЛЕМЕНТОВ"*/
-void DeleteNegative(Queue *MyQueue){
-    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
-    //с помощью цикла проходим по всему стеку
+void DeleteNegative(Queue *MyQueue){ // удаление определенных элементов
+    Queue *temp = MyQueue->Head; 
     while (temp != NULL){
         temp = temp->Tail;
     }
     temp = MyQueue->Head;
     Pop(MyQueue);
 }
- 
-/*ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ*/
-void AddNegative (int i, Queue *MyQueue) {
+void AddNegative (int i, Queue *MyQueue) { // добавление определенных элементов
     int count=0;
-    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
-    //с помощью цикла проходим по всему стеку
+    Queue *temp = MyQueue->Head; 
     while (temp != NULL){
         count++;
         temp = temp->Tail;
@@ -97,12 +68,9 @@ void AddNegative (int i, Queue *MyQueue) {
     Push(i, MyQueue);
     temp = temp->Tail;
 }
- 
-/*ПРОВЕРКА НА ПУСТОТУ*/
-void Checkman(Queue *MyQueue){
+void Checkman(Queue *MyQueue){ // проверка на пустоту
     int count=0;
-    Queue *temp = MyQueue->Head; //Объявляем указатель и Указываем ему, что его позиция в голове очереди
-    //с помощью цикла проходим по всему стеку
+    Queue *temp = MyQueue->Head;
     while (temp != NULL){
         count++;
         temp = temp->Tail;
@@ -114,26 +82,20 @@ void Checkman(Queue *MyQueue){
     else {cout << "Не пуст!" << endl;break;}
     }
 }
- 
 int main(){
-    Queue *MyQueue = new Queue; //Выделяем память для очереди
- 
-    CreateQueue(MyQueue); //Инициализируем очередь
+    Queue *MyQueue = new Queue; 
+    CreateQueue(MyQueue); 
     cout << "Проверили на пустоту" << endl;
     Checkman(MyQueue);
- 
     cout << "Создали список" << endl;
-    Show(MyQueue); //Выводим очередь на экран
- 
+    Show(MyQueue); 
     DeleteNegative(MyQueue);
-    cout << "Удалили элемент" << endl; // вопросик: удалять по индексу, или по значению? 
+    cout << "Удалили элемент" << endl;  
     Show(MyQueue);
- 
     AddNegative(42, MyQueue);
     cout << "Добавили элемент" << endl;
     Show(MyQueue);
- 
-    ClearQueue(MyQueue); //Очищаем память.
+    ClearQueue(MyQueue);
     delete MyQueue->Head;
     delete MyQueue;
     cout << "Память очищена" << endl;
