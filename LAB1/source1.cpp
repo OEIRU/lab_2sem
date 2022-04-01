@@ -2,133 +2,82 @@
 #include <fstream>
 #include <string>
 using namespace std;
-float number;
-float number2;
-float number3;
  
-struct polinomP { float data; float power; polinomP* next; } *S;
-void Read_polinomP(polinomP* S) // функция формирования списка
-{
-    polinomP* t;
+float value;
+int stepen;
+ 
+struct polinom { float data; float power; polinom* next; } *S, * S2, * S3;
+void Read_polinom(polinom* S, char text) {
+    polinom* t;
     t = S;
  
     ifstream F;
-    F.open("file1.txt");
+    F.open(text);
  
-    if (!F.is_open())
-    { cout << "Ошибка откытия файла" << endl; }
+    if (!F.is_open()) {
+        cout << "Ошибка откытия файла" << endl;
+    }
     else {
         cout << "Файл открыт" << endl;
  
-        while (!F.eof())
-        {
-            F >> number; // заглавное звено
-            t->next = new polinomP;
+        while (!F.eof()) {
+            F >> value; // заглавное звено
+            t->next = new polinom;
             t = t->next;
  
-            t->data = number;
-            t->power = number; 
+            t->data = value;
+            t->power = stepen;
         }
  
-        t->next = new polinomP; 
+        t->next = new polinom;
         t = t->next;
  
-        t->data = number;
-        t->power = number;
+        t->data = value;
+        t->power = stepen;
         t->next = NULL;
     }
     F.close();
 }
  
-struct polinomQ { float data; float number2; polinomQ* next; } *S2;
-void Read_polinomQ(polinomQ* S2) { // функция формирования списка 
-    polinomQ* t2;
-    t2 = S2;
-    ifstream F2;
-    F2.open("file2.txt");
- 
-    if (!F2.is_open())
-    { cout << "Ошибка откытия файла" << endl; }
-    else {
-        cout << "Файл открыт" << endl;
- 
-        while (!F2.eof())
-        {
-            F2 >> number2; // заглавное звено
-            t2->next = new polinomQ;
-            t2 = t2->next;
-            t2->data = number2;
-        }
- 
-        t2->next = new polinomQ;
-        t2 = t2->next;
-        t2->data = number2;
- 
-        t2->next = NULL;
+void Record_polinom(polinom* S, char text) {
+    ofstream fout(text, ios_base::app);
+    polinom* t;
+    fout << "polynom" << endl;
+    for (t = S->next; t->next != NULL; t = t->next) {
+        fout << t->data << " " << t->power << "| ";
     }
-    F2.close();
+    fout << endl;
 }
-struct polinomR { float data; float number3;  polinomR* next;} *S3;
-void Sum(polinomR* S3) {
-    polinomP *t;
-    polinomQ *t2;
-    polinomR *t3;
-    for (t = S, t2 = S2, t3 = S3; t->next != NULL && t2->next != NULL; t = t->next, t2 = t2->next) {
-        if ((t->data + t2->data) != 0)
-        {
  
- 
+void Sum(polinom* S, polinom* S2) {
+    polinom* t;
+    polinom* t2;
+    polinom* t3;
+    ofstream fout("out3.txt", ios_base::app);
+    fout << "summa polynom" << endl;
+    for (t = S->next, t2 = S2->next; t->next != NULL && t2->next != NULL; t = t->next, t2 = t2->next) {
+        if ((t->data + t2->data) != 0) {
             t3->next = new polinomR;
             t3 = t3->next;
-            t3->data = (t->data + t2->data);
-            t->power
+            t->power;
+                t3->data = (t->data + t2->data);
+            fout << t3 << ' ' << t << endl;
         }
-        else
-        {
-            t3 = 000;
-        }
-    }
-}
- 
-void Print(polinomP* S, polinomQ* S2, polinomR *S3)
-{
-    ofstream fout("file3.txt", ios_base::app);
-    polinomP* t;
-    fout << "polynom P" << endl;
-    for (t = S->next; t->next != NULL; t = t->next)
-    {
-        fout << t->data << " " << t->power << "| ";
- 
-    }
-    fout << endl;
-    polinomQ* t2;
-    fout << "polynom Q" << endl;
-    for (t2 = S2->next; t2->next != NULL; t2 = t2->next)
-    {
-        fout << t2->data << " ";
-    }
-    fout << endl;
-    polinomR* t3;
-    fout << "polinomR" << endl;
-    for (t3 = S3->next; t3->next != NULL; t3 = t3->next)
-    {
-        if (t != 000) {
-            fout << t3->data << " ";
-            }
         else {
-            fout << " ";
+            cout << "/n";
         }
     }
 }
+ 
 int main()
 {
     setlocale(LC_ALL, "RUS");
     S = new polinomP;
     S2 = new polinomQ;
     S3 = new polinomR;
-    Read_polinomP(S);
-    Read_polinomQ(S2);
-    Sum(S3);
-    Print(S, S2, S3);
+    Read_polinom(S, "text1.txt");
+    Record_polinom(S, "out1.txt");
+    Read_polinom(S2, "text2.txt");
+    Record_polinom(S2, "out2.txt");
+        Sum(S, S2);
 }
- 
