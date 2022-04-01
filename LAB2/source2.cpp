@@ -20,19 +20,6 @@ void putToQueue(queue *q, int iEl)   //добавить в очередь
     q->end = tmp;
 }
  
-void putToQueueBACK(queue *q, int iEl)   //добавить в очередь РЕВЕРС
-{
-    list *tmp;
-    tmp = new list;
-    tmp->pred = NULL;
-    tmp->el = iEl;
-    if(q->end != NULL)
-        q->end->pred = tmp;
-    else
-        q->beg = tmp;
-    q->end = tmp;
-}
- 
 int takeFromQueue(queue *q, int *iEl) // взять из очереди
 {
     if(q->beg == NULL) return 0;
@@ -45,17 +32,6 @@ int takeFromQueue(queue *q, int *iEl) // взять из очереди
     return 1;
 }
  
-int takeFromQueueBACK(queue *q, int *iEl) // взять из очереди РЕВЕРС
-{
-    if(q->beg == NULL) return 0;
-    list *tmp;
-    tmp = q->beg;
-    *iEl = tmp->el;
-    q->beg = tmp->pred;
-    delete tmp;
-    if(q->beg == NULL) q->end = NULL;
-    return 1;
-}
  
 queue *CreateQueue()            //создать очередь
 {
@@ -88,22 +64,6 @@ int ClearQueue(queue *q)        //очистка очереди
     return 1;
 }
  
-int ClearQueueBACK(queue *q)        //очистка очереди
-{
-    if(q->beg == NULL) return 0;
-    list *tmp, *t;
-    tmp = q->beg;
-    while(tmp->pred != NULL)
-    {
-        t = tmp;
-        tmp = t->pred;
-        delete t;
-    }
-    q->beg = NULL;
-    q->end = NULL;
-    return 1;
-}
- 
 void PrintQueue(queue *q)       //вывести очередь на экран
 {
     printf("\n");
@@ -119,25 +79,6 @@ void PrintQueue(queue *q)       //вывести очередь на экран
     {
         takeFromQueue(tmp, &iEl);
         putToQueue(q, iEl);
-    }
-    fout << endl;
-}
- 
-void PrintQueueBACK(queue *q)       //вывести очередь на экран
-{
-    printf("\n");
-    queue *tmp = CreateQueue();
-    int iEl;
-    while(!isQueueEmpty(q))
-    {
-        takeFromQueueBACK(q, &iEl);
-        fout << iEl << " ";
-        putToQueueBACK(tmp, iEl);
-    }
-    while(!isQueueEmpty(tmp))
-    {
-        takeFromQueueBACK(tmp, &iEl);
-        putToQueueBACK(q, iEl);
     }
     fout << endl;
 }
@@ -186,3 +127,12 @@ int main()
     ClearQueue(q);
     PrintQueue(q);
 }
+ 
+ /*
+ Что же пишут в газетах в разделе «Из зала суда»?
+Приговор приведен в исполненье. Взглянувши сюда,
+обыватель узрит сквозь очки в оловянной оправе,
+как лежит человек вниз лицом у кирпичной стены;
+но не спит. Ибо брезговать кумполом сны
+продырявленным вправе.  
+*/
