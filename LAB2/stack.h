@@ -10,8 +10,11 @@ struct list{int el; list *next; list *pred;};
 struct queue{list *beg, *end;};
 ofstream fout("output.txt", ios_base::app);
 
+
+
 void putToQueue(queue *q, int iEl);      //добавить в очередь
 int takeFromQueue(queue *q, int *iEl);   //взять из очереди
+
 queue *CreateQueue()            //создать очередь
 {
     queue *q;
@@ -20,9 +23,10 @@ queue *CreateQueue()            //создать очередь
     q->end = NULL;
     return q;
 }
+
 int isQueueEmpty(queue *q);              //проверка очереди на пустоту
 int ClearQueue(queue *q);                //очистка очереди
 void PrintQueue(queue *q);               //вывести очередь на экран
-void PrintFile()                         //чтение из файла
+void PrintFile(queue *q);                         //чтение из файла
 
 #endif

@@ -74,9 +74,8 @@ void PrintQueue(queue *q)       //вывести очередь на экран
     fout << endl;
 }
 
-void PrintFile() {
+void PrintFile(queue *q) {
     int i;
-    queue *q = CreateQueue();
     ifstream F;
     F.open("input.txt");
 
@@ -91,7 +90,6 @@ void PrintFile() {
         {
             F >> i; // заглавное звено
             putToQueue(q, i);
-            PrintQueue(q);
         }
     }
 }
