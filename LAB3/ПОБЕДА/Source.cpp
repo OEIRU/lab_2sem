@@ -20,7 +20,7 @@ int main() {
 	cin >> floor;
 
 	ifstream F;
-	F.open("C:\Users\VKostovsky\Desktop\input.txt");
+	F.open("input.txt");
 
 	if (!F.is_open())
 		cout << "Открой файл";
