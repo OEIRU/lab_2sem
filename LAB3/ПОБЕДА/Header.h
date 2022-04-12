@@ -5,26 +5,21 @@
 
 using namespace std;
 
-//дерево
-struct tree 
-{
+struct tree {
 	char elem;
 	struct tree* left, * right;
 };
 
-//очередь
-struct list 
-{  
+struct list {  
 	tree* field;
 	struct list* ptr;
 };
-struct queue
-{
+
+struct queue {
 	struct list* frnt, * rear;
 };
 
-
-int treeprintwide(queue* q, tree* d, int floor);
+int print_queue(queue* q, tree* d, int floor);
 
 struct tree* adde(char x, tree* derevo);
 
@@ -39,5 +34,3 @@ void Add(struct queue* q, tree* a);
 tree* Delete(queue* q);
 
 tree* getlast(struct queue* q);
-
-bool Full(queue* q);

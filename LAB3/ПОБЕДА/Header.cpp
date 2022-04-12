@@ -1,115 +1,102 @@
 #include "Header.h"
 
-    
-
-
-    struct tree* adde(char x, tree * derevo) {
-        if (derevo == NULL) { 
-            derevo = new tree;
-            derevo->elem = x;  
-            derevo->left = NULL;
-            derevo->right = NULL;
-        }
-        else  if (x < derevo->elem)
-            derevo->left = adde(x, derevo->left);
-        else  
-            derevo->right = adde(x, derevo->right);
-            return(derevo);
+struct tree* adde(char x, tree* d) {
+    if (d == NULL) {
+        d = new tree;
+        d->elem = x;
+        d->left = NULL;
+        d->right = NULL;
     }
+    else if (x < d->elem)
+        d->left = adde(x, d->left);
+    else
+        d->right = adde(x, d->right);
+    return(d);
+};
 
+list* init(tree* a) {                             // ƒобавление в очередь(вспомогательна€)
+    struct list* lst;
+                                                  // ¬ыделение пам€ти под корень списка
+    lst = (struct list*)malloc(sizeof(struct list));
+    lst->field = a;
+    lst->ptr = NULL;                              // ѕоследний узел списка
+    return(lst);
+}
 
+list* addelem(list* lst, tree* number) {          // ƒобавление в очередь (вспомогательна€)
+    struct list* temp, * p;
+    temp = (struct list*)malloc(sizeof(list));
+    p = lst->ptr;                                 // —охранение указател€ на следующий узел
+    lst->ptr = temp;                              // ѕредыдущий узел указывает на создаваемый
+    temp->field = number;                         // —охранение пол€ данных добавл€емого узла
+    temp->ptr = p;                                // —озданный узел указывает на следующий элемент
+    return(temp);
+}
 
+void initilisation(queue* q) {                    // »ницилизаци€ очереди
+    q->frnt = NULL;
+    q->rear = NULL;
+}
 
-
-
- 
-    list* init(tree* a)         //добавление в очередь(вспомогательна€)
-    {
-        struct list* lst;
-        // выделение пам€ти под корень списка
-        lst = (struct list*)malloc(sizeof(struct list));
-        lst->field = a;
-        lst->ptr = NULL; // это последний узел списка
-        return(lst);
+void Add(queue* q, tree* x) {                     // ƒобавление в очередь
+    if ((q->rear == NULL) && (q->frnt == NULL)) {
+        q->rear = init(x);
+        q->frnt = q->rear;
     }
+    else
+        q->rear = addelem(q->rear, x);
+}
 
-
-
-     list* addelem(list* lst, tree* number)         //добавление в очередь (вспомогательна€)
-    {
-        struct list* temp, * p;
-        temp = (struct list*)malloc(sizeof(list));
-        p = lst->ptr; // сохранение указател€ на следующий узел
-        lst->ptr = temp; // предыдущий узел указывает на создаваемый
-        temp->field = number; // сохранение пол€ данных добавл€емого узла
-        temp->ptr = p; // созданный узел указывает на следующий элемент
-        return(temp);
+tree* Delete(queue* q) {                          // ”даление головы очереди
+    struct list* temp;
+    tree* x;
+    if (q->frnt == NULL) {
+        printf("ќчередь пуста!\n\n");
+        return 0;
     }
+    x = q->frnt->field;
+    temp = q->frnt;
+    q->frnt = q->frnt->ptr;
+    free(temp);
+    return x;
+}
 
-    void initilisation(queue* q)            //иницилизаци€ очереди
-    {
-        q->frnt = NULL;
-        q->rear = NULL;
-    }
+tree* getlast(queue* q) {                         // ¬з€тие головы очереди
+    tree* x;
+    x = q->frnt->field;
+    return x;
+}
 
-    void Add(queue* q, tree* x)              //добавление в очередь
-    {
-        if ((q->rear == NULL) && (q->frnt == NULL)) {
-            q->rear = init(x);
-            q->frnt = q->rear;
-        }
-        else
-            q->rear = addelem(q->rear, x);
-    }
- 
-     tree* Delete(queue* q)                 // удаление головы очереди
-    {
-        struct list* temp;
-        tree* x;
-        if (Full(q) == 1) {
-            printf("ќчередь пуста!\n\n");
-            return 0;
-        }
-        x = q->frnt->field;
-        temp = q->frnt;
-        q->frnt = q->frnt->ptr;
-        free(temp);
-        return x;
-    }
+int n = 0;
 
-    bool Full(queue* q)                 //проверка на заполненость очереди
-    {
-        if (q->frnt == NULL)
-            return 1;
-        else
-            return 0;
-    }
-    tree* getlast(queue* q)                 // вз€тие головы очереди
-    {
-        tree* x;
-        x = q->frnt->field;
-        return x;
-    }
-
-
-    int n = 0;
-   int treeprintwide(queue* q, tree* d, int floor)                    // вывод дерева в ширину
-    {
-       int sosed = 0, sosed_2 = 0;
-        initilisation(q);
-        if (d != NULL) {Add(q, d);
+int print_queue(queue* q, tree* d, int floor) { // ¬ывод дерева в ширину
+    int sosed = 0, sosed_2 = 0;
+    initilisation(q);
+    if (d != NULL) {
+        Add(q, d);
         do
-            {
-                d = getlast(q);
-                cout << n; 
-                if (d->elem != NULL) sosed++;
-                    cout << d->elem;
-                    if (d->left != NULL) { Add(q, d->left);                 n++; sosed_2 = sosed; sosed = 0; }
-                    if (d->right != NULL) { Add(q, d->right);                 /*cout << n++; */ }
-                    if (n > floor) { cout << endl;  cout << sosed_2; return 1; }
-                    Delete(q);
-        } while (q->frnt != NULL); cout << sosed_2;
-        }         
-    }   
+        {
+            d = getlast(q);
+            cout << n;
+            if (d->elem != NULL) sosed++;
+            cout << d->elem;
+            if (d->left != NULL) {
+                Add(q, d->left); n++; sosed_2 = sosed; sosed = 0;
+            }
+            if (d->right != NULL)
+                Add(q, d->right);
+            if (n > floor) {
+                cout << "\n  оличество элементов на этом этаже: " << sosed_2; return 1;
+            }
+            Delete(q);
+        } while (q->frnt != NULL);
+        // дл€ последнего сущ. этажа
+        if (n == floor) {
+            cout << " \n  оличество элементов на этом этаже: " << sosed_2;
+        }
+        else cout << "\n Ётого этажа не существует";
+    }
+    return sosed_2;
+}
 
-   // отдых тоже важен, а то  if (n != n) { cout << n; }
+// отдых тоже важен, а то  if (n != n) { cout << n; }
