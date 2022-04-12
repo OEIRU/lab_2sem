@@ -8,7 +8,7 @@ using namespace std;
 //дерево
 struct tree 
 {
-	int elem;
+	char elem;
 	struct tree* left, * right;
 };
 
@@ -24,9 +24,11 @@ struct queue
 };
 
 
-void treeprintwide(queue* q, tree* d);
-struct tree* adde(fstream* doc);
-	struct list* init(tree* a);
+int treeprintwide(queue* q, tree* d, int floor);
+
+struct tree* adde(char x, tree* derevo);
+
+struct list* init(tree* a);
 
 void initilisation(struct queue* q);
 
