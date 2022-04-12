@@ -1,4 +1,6 @@
 #include "Header.h"
+#include <fstream>
+using namespace std;
 
 struct tree* adde(char x, tree* d) {
     if (d == NULL) {
