@@ -1,6 +1,0 @@
-﻿  Header.cpp
-C:\Users\VKostovsky\source\repos\Project1\Project1\Header.cpp(9,15): warning C4101: num: неиспользованная локальная переменная
-C:\Users\VKostovsky\source\repos\Project1\Project1\Header.cpp(127,11): warning C4101: num: неиспользованная локальная переменная
-C:\Users\VKostovsky\source\repos\Project1\Project1\Header.cpp(34): warning C4715: adde: значение возвращается не при всех путях выполнения
-C:\Users\VKostovsky\source\repos\Project1\Project1\Header.cpp(152): warning C4715: build_tree: значение возвращается не при всех путях выполнения
-  Project1.vcxproj -> C:\Users\VKostovsky\source\repos\Project1\x64\Debug\Project1.exe
