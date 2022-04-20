@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
+
+namespace A {
+	int count = 0, sum = 0;
+}
+
+struct tree {
+	int elem;
+	struct tree* left, * right;
+};
+
+
+struct tree* adde(int x, tree* d) {
+	if (d == NULL) {
+		d = new tree;
+		d->elem = x;
+		d->left = NULL;
+		d->right = NULL;
+	}
+	else if (x < d->elem) {
+		d->left = adde(x, d->left);
+	}
+	else {
+		d->right = adde(x, d->right);
+	}
+	return(d);
+};
+
+
+int main() {
+	setlocale(LC_ALL, "Rus");
+	tree* d = NULL;
+	int x;
+	float otvet;
+	ifstream F;
+	F.open("input.txt");
+
+	if (!F.is_open())
+	{
+		cout << "Файл не открылся! Проверь название/существование" << endl;
+	}
+	else {
+		cout << "Opening file" << endl;
+
+		while (!F.eof())
+		{
+			F >> x; // заглавное звено
+			if (x != 0)
+				A::count++;
+				A::sum += x;
+			d = adde(x, d);
+		}
+	}
+	cout << x << " - " << A::sum << endl;
+	cout << x << " - " << A::count << endl;
+	otvet = static_cast<float>(A::sum) / A::count;
+	cout << otvet;
+}
