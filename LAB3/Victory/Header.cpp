@@ -1,30 +1,7 @@
-#include <iostream>
+#include "Header.h"
 #include <fstream>
-#include <locale.h>
 using namespace std;
-
-namespace A { // глобальные переменные
-	int count = 0;
-	int floor_now = 1; 
-	int floor;
-	int count_sosed = 0;
-}
-
-struct btree {
-	char elem;
-	btree* left, * right;
-};
-
-struct list {
-	int frontir = 0;
-	btree* field;
-	struct list* ptr;
-};
-
-struct queue {
-	struct list* frnt, * rear;
-};
-
+using namespace A;
 btree* build_tree(fstream* doc) {     // Функция считывания дерева из файла "input.txt" 
 	char sym;
 	btree* d;
@@ -44,7 +21,7 @@ btree* build_tree(fstream* doc) {     // Функция считывания д�
 	case ',': {
 		d = build_tree(doc);
 		break;
-		}
+	}
 	}
 }
 
@@ -71,7 +48,7 @@ list* init(btree* a) {                            // инициализация 
 }
 
 list* addelem(list* lst, btree* number) {         // "ретранслятор"
-	struct list* temp, * p; 
+	struct list* temp, * p;
 	temp = (struct list*)malloc(sizeof(list));
 	p = lst->ptr;                                 // Сохранение указателя на следующий узел
 	lst->ptr = temp;                              // Предыдущий узел указывает на создаваемый
@@ -79,17 +56,17 @@ list* addelem(list* lst, btree* number) {         // "ретранслятор"
 	temp->ptr = p;
 	//global.frontir->global.frontir++;
 	A::count++;
-	if (A::count == 2) { A::floor_now++;}
+	if (A::count == 2) { A::floor_now++; }
 	return(temp);
 }
 
 void Add(queue* q, btree* x) {                     // Добавление в очередь 
 	if ((q->rear == NULL) && (q->frnt == NULL)) {
-		q->rear = init(x); 		
+		q->rear = init(x);
 		q->frnt = q->rear;
 	}
 	else {
-		q->rear = addelem(q->rear, x) ;
+		q->rear = addelem(q->rear, x);
 		if (A::count == 2) {
 			A::count_sosed++;
 		}
@@ -107,7 +84,7 @@ btree* Delete(queue* q) {                          // Удаление голо�
 	}
 	x = q->frnt->field;
 	temp = q->frnt;
-	q->frnt = q->frnt->ptr; 
+	q->frnt = q->frnt->ptr;
 	free(temp);
 	return x;
 }
@@ -126,25 +103,7 @@ void print(queue* q, btree* head) {				   // Вывод
 			if (d->right != NULL)
 				Add(q, d->right);
 			Delete(q);
-			A::count = 0; 
-		} while (A::floor_now != A::floor+1);
+			A::count = 0;
+		} while (A::floor_now != A::floor + 1);
 	}
-}
-
-int main() {            
-	setlocale(LC_CTYPE, "Russian");
-	cout << "Введите этаж: ";
-	cin >> A::floor;
-	btree* d = NULL;
-	queue* q;
-	q = (queue*)malloc(sizeof(queue*));
-	initilisation(q);
-
-	fstream in("input.txt");
-	btree* root = build_tree(&in);
-	print (q, root);
-	cout << "Обход в ширину" << endl;
-	cout << "Количество соседей: " << A::count_sosed << endl;
-
-	return 1;
 }
