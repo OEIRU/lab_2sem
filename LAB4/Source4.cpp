@@ -10,7 +10,7 @@ struct table {
 	float three = NULL;
 };
 
-int read_machine() {
+int read_machine() { // машина, которая перебирает значения и делит на 5
 	ifstream fin("input.txt");
 	int set = 0, i;
 	while (!fin.eof()) {
@@ -35,7 +35,7 @@ void add(int team, table* T, int jup) {
 			{
 				switch (i % 5)
 				{
-				case 0: // из пяти остатот при остатке дает только первый элемент
+				case 0: // из пяти остаток при остатке дает только первый элемент
 					T[team].first++;
 					break;
 				case 1: // а тут только второй 
@@ -69,18 +69,10 @@ void add(int team, table* T, int jup) {
 		T[team].last = (T[team].last / jup) * 100;
 		T[team].three = (T[team].three / jup) * 100;
 		// построчное деление на 100
-		printf_s("Команда №%d: \n Первый - %3.f \n Последний - %3.f \n В тройке - %3.f\n", team, T[team].first, T[team].last, T[team].three);
+		printf_s("Команда №%d: \n 1 - %2.f \n 2 - %2.f \n В тройке - %2.f\n", team, T[team].first, T[team].last, T[team].three);
 		keep.close();
 	}
 }
-
-// Построить таблицу, содержащую проценты голосов, отданных командам - \
-претендентам на первое место, \
-командам - претендентам на последнее место \
-и проценты голосов, отданных командам - претендентам на первую тройку.
-
-// ПОДПРАВИЛ
-
 
 int main() {
 	const int N = 100; // размерность таблицы
@@ -88,12 +80,12 @@ int main() {
 	table T[N]; // таблица с результатами
 	ifstream in("input.txt");
 	int i = 0, jup, team, num;
-	jup = read_machine(); // чтение из файла (посимвольно)
-	in >> team; // чтение первого элемента из машины, чтобы заложить его в while
+	jup = read_machine(); // чтение из файла (почисленно)
+	in >> team; // считываем номер первой команды
 	while (!in.eof())
 	{
-		add(team, T, jup); // номер команды закладываем в таблицу 
-		in >> team; 
+		add(team, T, jup);
+		in >> team; // считываем номер следующей команды в строке
 	}
 	add(team, T, jup);
 
