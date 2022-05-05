@@ -21,50 +21,56 @@ int read_machine() { // машина, которая перебирает зна
 	return set;
 }
 
-void add(int j, table* T, int jup) {
+void add(int team, table* T, int jup) {
 	int num, i;
 	ifstream keep;
-	if (T[j].first == NULL && T[j].last == NULL && T[j].three == NULL)
+	if (T[team].first == NULL && T[team].last == NULL && T[team].three == NULL)
 	{
 		keep.open("input.txt");
-		keep >> j;
+		keep >> num;
 		i = 0;
 		while (!keep.eof())
 		{
-
+			if (num == team)
+			{
 				switch (i % 5)
 				{
 				case 0: // из пяти остаток при остатке дает только первый элемент
-					T[j].first++;
+					T[team].first++;
 					break;
 				case 1: // а тут только второй 
-					T[j].last++;
+					T[team].last++;
 					break;
 				default: // остальные вкладываем сюда 
-					T[j].three++;
+					T[team].three++;
 					break;
 				}
-
-			keep >> j; // обновить уровень чтения
+			}
+			keep >> num; // обновить уровень чтения
 			i++;
 		}
+		if (num == team) // чтение последнего
+		{
 			switch (i % 5)
 			{
 			case 0:
-				T[j].first++;
+				T[team].first++;
 				break;
 			case 1:
-				T[j].last++;
+				T[team].last++;
 				break;
 			default:
-				T[j].three++;
+				T[team].three++;
 				break;
 			}
-			T[j].first = (T[j].first / jup) * 100;
-			T[j].last = (T[j].last / jup) * 100;
-			T[j].three = (T[j].three / jup) * 100;
-		//printf_s("Команда №%d: \n 1 - %2.f \n 2 - %2.f \n В тройке - %2.f\n", j, T[j].first, T[j].last, T[j].three);
+		}
 
+		T[team].first = (T[team].first / jup) * 100;
+		T[team].last = (T[team].last / jup) * 100;
+		T[team].three = (T[team].three / jup) * 100;
+		printf_s("Команда №%d: \n 1 - %2.f \n 2 - %2.f \n В тройке - %2.f\n", team, T[team].first, T[team].last, T[team].three);
+
+		// построчное деление на 100
 		keep.close();
 	}
 }
@@ -74,21 +80,20 @@ int main() {
 	setlocale(LC_CTYPE, "Russian");
 	table T[N]; // таблица с результатами
 	ifstream in("input.txt");
-	int i = 0, jup, j, num, M = 10;
-	cout << "Введите количество команд" << endl;
+	int i = 0, jup, team = 1, num, M = 5;
 	jup = read_machine(); // чтение из файла (почисленно)
-	for (int j = 0; j < M; j++) {
-		in >> j; // считываем номер первой команды
-		while (!in.eof())
+	
+	while (!in.eof())
+	{
+		add(team, T, jup);
+		team++;
+		if (team == M)
 		{
-			add(j, T, jup);
-			// построчное деление на 100
-
-			printf_s("Команда №%d: \n 1 - %2.f \n 2 - %2.f \n В тройке - %2.f\n", j, T[j].first, T[j].last, T[j].three);
-
-			in >> j; // считываем номер следующей команды в строке
+			break;
 		}
-		add(j, T, jup);
+		//in >> team; // считываем номер следующей команды в строке
 	}
+	add(team, T, jup);
+
 	return 0;
 }
