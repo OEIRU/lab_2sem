@@ -44,42 +44,6 @@ void showed(int** ed, int n)
     }
 }
 
-int* ThisIsTheWay(int* sh, int** rw, int n)
-{
-    int i, j;
-    int* v = new int[n]; //Заводим массив для хранения посещенных городов, 1 - посещен, 0 - нет
-    for (i = 0; i < n; i++)
-        v[i] = 0;
-    int close, shortway; //Заводим локальные переменные отвечающие за индекс ближайшего города, кратчайшую дорогу, соответсвенно
-    do {
-        close = Inf;
-        shortway = Inf;
-        for (i = 0; i < n; i++)
-        {
-            if ((v[i] == 0) && (sh[i] < shortway)) // Проверяем, посещена ли вершина, и является ли текущий путь до нее кратчайшим
-            {
-                shortway = sh[i]; //Если да, то обновляем данные
-                close = i;
-            }
-        }
-        if (close != Inf)
-        {
-            for (i = 0; i < n; i++) //Проверяем, является ли новый короткий путь до города, кратчайшим. Сравниваем с прошлым значением. 
-            {
-                if (rw[close][i] > 0)
-                {
-                    if (shortway + rw[close][i] < sh[i])
-                    {
-                        sh[i] = shortway + rw[close][i];
-                    }
-                }
-            }
-            v[close] = 1;
-        }
-    } while (close < Inf);
-    return sh;
-}
-
 int main()
 {
     ios state(nullptr);
