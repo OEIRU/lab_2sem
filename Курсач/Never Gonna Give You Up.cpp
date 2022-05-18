@@ -1,29 +1,26 @@
 #include <iostream>
-#include <locale.h>
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
 
 namespace Global {
-    int Sum_from_cycle = 0;
+    int Sum_from_cycle = 0; 
     int Town_from_cycle = 0;
-    int Sum_final = 100000000;
+    int Sum_final = 100000;
     int Town_final = 0;
-    int const Inf = 1000000000;
+    int const Inf = 100000;
 };
 
 using namespace std;
 using namespace Global;
 
+fstream fin;
+ofstream fout;
 
-int** EmptyRoads(int** r, int n)
-{
+int** CreateMap(int** r, int n){
     int i, j;
-    for (i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++){
         r[i][i] = 0;
-        for (j = i + 1; j < n; j++)
-        {
+        for (j = i + 1; j < n; j++){
             r[i][j] = 0;
             r[j][i] = r[i][j];
         }
@@ -31,131 +28,97 @@ int** EmptyRoads(int** r, int n)
     return r;
 }
 
-void showed(int** ed, int n)
-{
+void PrintMap(int** ed, int n){
     int i, j;
-    for (i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++){
         for (j = 0; j < n; j++)
-        {
-            cout << setw(5) << ed[i][j] << " ";
-        }
-        cout << '\n';
+            fout << setw(5) << ed[i][j] << " ";
+        fout << '\n';
     }
 }
 
-int main()
-{
-    ios state(nullptr);
+int main(){
     int temp, minindex, min;
     setlocale(LC_ALL, "ru");
-    fstream fin;
     fin.open("input.txt");
+    fout.open("out.txt");
     if (!fin.is_open())
-    {
         cout << "Файл не открылся! Проверь название/существование" << endl;
-    }
     else {
         cout << "Чтение из файла произведено успешно." << endl;
-        ofstream fout;
-        fout.open("out.txt");
+
         int n;
         fin >> n; // ввод количества городов
-        cout << n << endl;
-        if (n > 1)
-        {
-            int A = Inf;
-            int B = Inf;
+        if (n > 1){
             int i, j;
-            string* town = new string[n]; // Заводим массив стрингов для хранения названий городов
+            string* town = new string[n]; // массив с названиями городов
             for (i = 0; i < n; i++)
-            {
                 fin >> town[i];
-                cout << town[i] << endl;
-            }
             string typeroad, town1, town2;
-            int townind1, townind2;
-            int way;
-            int** rw = new int* [n]; //готовим таблицу смежности железных дорог
+            int town_index1, town_index2, way;
+            int** map = new int* [n]; // таблица смежности
             for (i = 0; i < n; i++)
-                rw[i] = new int[n];
-            rw = EmptyRoads(rw, n);
-            while (fin) //Ввод систем дорог
-            {
+                map[i] = new int[n];
+            map = CreateMap(map, n);
+            while (fin){ //Ввод систем дорог
                 fin >> town1 >> town2 >> way;
                 for (int e = 0; e < n; e++)
                 {
-                    if (town1 == town[e]) townind1 = e;
-                    else if (town2 == town[e]) townind2 = e;
+                    if (town1 == town[e]) town_index1 = e;
+                    else if (town2 == town[e]) town_index2 = e;
                 }
-                if (rw[townind1][townind2] == 0 && way > 0)
+                if (map[town_index1][town_index2] == 0 && way > 0)
                 {
-                    rw[townind1][townind2] = way;
-                    rw[townind2][townind1] = way;
+                    map[town_index1][town_index2] = way;
+                    map[town_index2][town_index1] = way;
                 }
-                else if (way < rw[townind1][townind2] && way > 0)
+                else if (way < map[town_index1][town_index2] && way > 0)
                 {
-                    rw[townind1][townind2] = way;
-                    rw[townind2][townind1] = way;
+                    map[town_index1][town_index2] = way;
+                    map[town_index2][town_index1] = way;
                 }
-                else if (way < 0) fout << "Проверьте корректность входных данных. Введено неверное расстояние между городами " << town1 << " и " << town2 << '\n';
+                else if (way < 0) fout << "Не верно задано расстояние между " << town1 << " и " << town2 << '\n';
             }
-            showed(rw, n);
-            cout << "Жито с плесенью:" << endl;
-            int* max_length = new int[n]; // 
-            int* check_this_out = new int[n]; // 
-            for (i = 0; i < n; i++)
-            {
+
+            int* max_length = new int[n]; 
+            int* check_this_out = new int[n]; 
+            for (i = 0; i < n; i++){
                 max_length[i] = 10000;
                 check_this_out[i] = 1;
             }
 
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++){
                 max_length[j] = 0;
                 do {
                     minindex = 10000;
                     min = 10000;
-                    for (int i = 0; i < n; i++)
-                    {
-                        if ((check_this_out[i] == 1) && (max_length[i] < min))
-                        {
+                    for (int i = 0; i < n; i++){
+                        if ((check_this_out[i] == 1) && (max_length[i] < min)){
                             min = max_length[i];
                             minindex = i;
                         }
                     }
-                    if (minindex != 10000)
-                    {
-                        for (int i = 0; i < n; i++)
-                        {
-                            if (rw[minindex][i] > 0)
-                            {
-                                temp = min + rw[minindex][i];
-                                if (temp < max_length[i])
-                                {
+                    if (minindex != 10000){
+                        for (int i = 0; i < n; i++){
+                            if (map[minindex][i] > 0){
+                                temp = min + map[minindex][i];
+                                if (temp < max_length[i]){
                                     max_length[i] = temp;
                                 }
                             }
                         }
-
                         check_this_out[minindex] = 0;
-
-
                     }
-
-                } while (minindex < 10000);
-                cout << "ПриЁмник Путина - " << j+1 << endl;
+                } 
+                while (minindex < 10000);
+               
                 int summa_min = 0;
-                for (int m = 0; m < n; m++) {
-                    cout << max_length[m] << " ";
-                    summa_min += max_length[m];
-                }
+                for (int m = 0; m < n; m++)
+                    summa_min += max_length[m];  
                 Sum_from_cycle = summa_min;
-                summa_min = 0;
-                cout << Sum_from_cycle << endl;
                 Town_from_cycle = j;
-                cout << endl;
-                for (i = 0; i < n; i++)
-                {
+                summa_min = 0;
+                for (i = 0; i < n; i++){
                     max_length[i] = 10000;
                     check_this_out[i] = 1;
                 }
@@ -163,11 +126,10 @@ int main()
                     Sum_final = Sum_from_cycle;
                     Town_final = j;
                 }
-
-
             }
-            cout << "САМЫЙ ГЛАВНЫЙ АНАРХИСТ: " << town[Town_final] << " cо значением - " << Sum_final << endl;
+            fout << "Город с минимальной суммой расстояний до других городов: " << town[Town_final] << " cо значением - " << Sum_final << endl;
         }
+        cout << "Данные записаны в файл";
     }
     return 0;
 }
