@@ -78,7 +78,7 @@ int main(){
                 }
                 else if (way < 0) fout << "Не верно задано расстояние между " << town1 << " и " << town2 << '\n';
             }
-             
+            PrintMap(map, n);
             int* min_length = new int[n]; // минимальная длинна 
             int* check_this_out = new int[n]; // флажок о входе в данный город
             for (i = 0; i < n; i++){
@@ -89,7 +89,7 @@ int main(){
             for (int j = 0; j < n; j++){
                 min_length[j] = 0;
                 do {
-                    minindex = 10000;
+                    minindex = 10000; 
                     min = 10000;
                     for (int i = 0; i < n; i++){
                         if ((check_this_out[i] == 1) && (min_length[i] < min)){
@@ -121,6 +121,7 @@ int main(){
                     min_length[i] = 10000;
                     check_this_out[i] = 1;
                 }
+                
                 if (Sum_from_cycle < Sum_final) {
                     Sum_final = Sum_from_cycle;
                     Town_final = j;

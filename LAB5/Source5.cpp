@@ -130,5 +130,24 @@ int main() {
 	for (int i = 0; i < N; i++)
 		cout << "  " << T[i].index << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
 
+	/// 5 ЛАБА CONFERDED
+	cout << "5 ЛАБА, РАСПРОСТРАНИТЕ" << endl;
+	for (int i = 0; i < N - 1; i++) { // да мне уже все равно 
+		for (int j = 0; j < N - i - 1; j++) { // как выйдет
+			if (T[j].first < T[j + 1].first) {
+				// меняем index
+				temp = T[j].index;
+				T[j].index = T[j + 1].index;
+				T[j + 1].index = temp;
+				// меняем first
+				temp1 = T[j].first;
+				T[j].first = T[j + 1].first;
+				T[j + 1].first = temp1;
+			}
+		}
+	}
+	cout << "https://youtu.be/fpozpsc1AnQ" << endl;
+	for (int i = 0; i < N; i++)
+		cout << "  " << T[i].index << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
 	return 0;
 }
