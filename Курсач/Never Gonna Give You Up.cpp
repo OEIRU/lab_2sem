@@ -3,11 +3,10 @@
 #include <iomanip>
 
 namespace Global {
-    int Sum_from_cycle = 0; 
-    int Town_from_cycle = 0;
-    int Sum_final = 100000;
-    int Town_final = 0;
-    int const Inf = 100000;
+    int Sum_from_cycle; // временная переменная в цикле
+    int Town_from_cycle; // временная переменная индекса
+    int Sum_final = 100000; // минимальная сумма
+    int Town_final; // город 
 };
 
 using namespace std;
@@ -28,11 +27,11 @@ int** CreateMap(int** r, int n){
     return r;
 }
 
-void PrintMap(int** ed, int n){
+void PrintMap(int** map, int n){
     int i, j;
     for (i = 0; i < n; i++){
         for (j = 0; j < n; j++)
-            fout << setw(5) << ed[i][j] << " ";
+            fout << setw(5) << map[i][j] << " ";
         fout << '\n';
     }
 }
@@ -79,22 +78,22 @@ int main(){
                 }
                 else if (way < 0) fout << "Не верно задано расстояние между " << town1 << " и " << town2 << '\n';
             }
-
-            int* max_length = new int[n]; 
-            int* check_this_out = new int[n]; 
+             
+            int* min_length = new int[n]; // минимальная длинна 
+            int* check_this_out = new int[n]; // флажок о входе в данный город
             for (i = 0; i < n; i++){
-                max_length[i] = 10000;
+                min_length[i] = 10000;
                 check_this_out[i] = 1;
             }
 
             for (int j = 0; j < n; j++){
-                max_length[j] = 0;
+                min_length[j] = 0;
                 do {
                     minindex = 10000;
                     min = 10000;
                     for (int i = 0; i < n; i++){
-                        if ((check_this_out[i] == 1) && (max_length[i] < min)){
-                            min = max_length[i];
+                        if ((check_this_out[i] == 1) && (min_length[i] < min)){
+                            min = min_length[i];
                             minindex = i;
                         }
                     }
@@ -102,24 +101,24 @@ int main(){
                         for (int i = 0; i < n; i++){
                             if (map[minindex][i] > 0){
                                 temp = min + map[minindex][i];
-                                if (temp < max_length[i]){
-                                    max_length[i] = temp;
+                                if (temp < min_length[i]){
+                                    min_length[i] = temp;
                                 }
                             }
                         }
                         check_this_out[minindex] = 0;
                     }
                 } 
-                while (minindex < 10000);
+                while (minindex < 10000); // пока не закончатся города, в которые еще ни разу не заходили
                
                 int summa_min = 0;
                 for (int m = 0; m < n; m++)
-                    summa_min += max_length[m];  
+                    summa_min += min_length[m];  // нахождение минимального значения
                 Sum_from_cycle = summa_min;
                 Town_from_cycle = j;
                 summa_min = 0;
                 for (i = 0; i < n; i++){
-                    max_length[i] = 10000;
+                    min_length[i] = 10000;
                     check_this_out[i] = 1;
                 }
                 if (Sum_from_cycle < Sum_final) {
