@@ -58,7 +58,7 @@ int main() {
             if (town1 == town2) { town_index1 = 0; town_index2 = 0; fout << "Найдена и проигнорирована петля " << town1 << endl; }
             
             CheckSpace(map, n);
-            PrintMap(map, n);
+                       PrintMap(map, n);
 
             // Начало работы с файлами
             int* min_length = new int[n]; // информация о минимальной длине 
@@ -70,17 +70,17 @@ int main() {
                 check_this_out[i] = 1;
             }
             // АЛГОРИТМ ДЕЙКСТРЫ
-            for (int j = 0; j < n; j++) { 
+            for (int j = 0; j < n; j++) {
                 min_length[j] = 0; // обнуляем переменную минимальной длины
                 do {
                     minindex = 100000; // выставляем недостижимыми значения 
                     min = 100000; // я
                     for (int i = 0; i < n; i++) {
-                        if ((check_this_out[i] == 1) && (min_length[i] < min)) { 
+                        if ((check_this_out[i] == 1) && (min_length[i] < min)) {
                             min = min_length[i];
                             minindex = i;
                         }
-                    }   
+                    }
                     if (minindex != 100000) {
                         for (int i = 0; i < n; i++) {
                             if (map[minindex][i] > 0) {
@@ -97,7 +97,7 @@ int main() {
 
                 for (int m = 0; m < n; m++)
                     summa_min += min_length[m];  // нахождение минимального значения
-                Sum_from_cycle = summa_min;     
+                Sum_from_cycle = summa_min;
                 Town_from_cycle = j;
                 summa_min = 0;
                 for (i = 0; i < n; i++) {
@@ -115,4 +115,3 @@ int main() {
     }
     return 0;
 }
-
