@@ -2,6 +2,7 @@
 #include <fstream>
 #include <locale.h>
 #include <stdio.h>
+#include "ConsoleApplication8.h"
 using namespace std;
 
 struct table {
