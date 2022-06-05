@@ -2,7 +2,6 @@
 #include <fstream>
 #include <locale.h>
 #include <stdio.h>
-#include "ConsoleApplication8.h"
 using namespace std;
 
 struct table {
@@ -30,12 +29,13 @@ void add(int team, table* T, int jup) {
 	{
 		keep.open("input.txt");
 		keep >> num;
+
 		i = 0;
 		while (!keep.eof())
 		{
+
 			if (num == team)
 			{
-				T[team].index = team;
 				switch (i % 5)
 				{
 				case 0: // из пяти остаток при остатке дает только первый элемент
@@ -48,13 +48,13 @@ void add(int team, table* T, int jup) {
 					T[team].three++;
 					break;
 				}
+
 			}
 			keep >> num; // обновить уровень чтения
 			i++;
 		}
 		if (num == team) // чтение последнего
 		{
-			T[team].index = team;
 			switch (i % 5)
 			{
 			case 0:
@@ -68,7 +68,6 @@ void add(int team, table* T, int jup) {
 				break;
 			}
 		}
-
 		T[team].first = (T[team].first / jup) * 100;
 		T[team].last = (T[team].last / jup) * 100;
 		T[team].three = (T[team].three / jup) * 100;
@@ -78,87 +77,110 @@ void add(int team, table* T, int jup) {
 	}
 }
 
-void QuickSort(int l, int r, table* a) {
-	int x, i, j;
-	if (l < r) {
-		x = a[(l + r) / 2].first;
-		i = l; j = r;
-		while (i <= j) {
-			while (a[i].first < x) i++;
-			while (a[j].first > x) j--;
-			if (i <= j) { swap(a[i++].first, a[j--].first); swap(a[i++].first, a[j--].first); }
+void qs(table* s_arr, int f, int l) // таблица не входит(((
+{
+	if (f < l)
+	{
+		int left = f, right = l, middle = s_arr[(left + right) / 2].first;
+		do
+		{
+			while (s_arr[left].first < middle) left++;
+			while (s_arr[right].first > middle) right--;
+			if (left <= right)
+			{
+				int tmp = s_arr[left].first;
+				s_arr[left].first = s_arr[right].first;
+				s_arr[right].first = tmp;
+				left++;
+				right--;
+			}
+		} while (left <= right);
+		qs(s_arr, f, right);
+		qs(s_arr, left, l);
+	}
+}
+
+void ShellSort(int n, table* mass)
+{
+	int i, j, step;
+	int tmp;
+	for (step = n / 9; step > 0; step /= 9)
+		for (i = step; i < n; i++)
+		{
+			tmp = mass[i].first;
+			for (j = i; j >= step; j -= step)
+			{
+				if (tmp > mass[j - step].first) {
+					//mass[j].index = mass[j - step].index;
+					mass[j].first = mass[j - step].first;
+					//mass[j].last = mass[j - step].last;
+					//mass[j].three = mass[j - step].three;
+					// индексация не работает((((((
+				}
+				else
+					break;
+			}
+			mass[j].first = tmp;
 		}
-		QuickSort(l, j, a);
-		QuickSort(i, r, a);
+}
+
+void pyramide (table* a, int i, int j) { //массонский образ жизни
+	int max = i;
+	do {
+		t = max; lt = 2 * t + 1; rt = 2 * (t + 1);
+		if (lt =< j)
+			if (a[i].first > a[i].first max (????)).....................................................................................................................
 	}
 }
 
 int main() {
+	const int N = 100; // размерность таблицы
 	setlocale(LC_CTYPE, "Russian");
-	int i = 0, jup, team, num;
-	const int N = 10; // размерность таблицы СТАТИЧЕСКАЯ
-
-	ifstream in("input.txt");
-	in >> team; // считываем номер первой команды
-	jup = read_machine(); // чтение из файла (почисленно)
-
 	table T[N]; // таблица с результатами
+	table Z[N];
+	ifstream in("input.txt");
+	int i = 0, jup, team = 1, num, M = 10;
+	jup = read_machine(); // чтение из файла (почисленно)
 
 	while (!in.eof())
 	{
 		add(team, T, jup);
-		in >> team; // считываем номер следующей команды в строке
+		team++;
+		if (team == M)
+		{
+			break;
+		}
 	}
 	add(team, T, jup);
 
-	int temp, temp1, temp2, temp3;
-
-	for (int i = 0; i < N - 1; i++) { // лютый костыль по сортировке ()
-
-		for (int j = 0; j < N - i - 1; j++) // работает, не трожь 
-			if (T[j].index < T[j + 1].index) { // НУЛИ В КОНЦЕ
-
-					// меняем элементы местами
-				temp = T[j].index;
-				T[j].index = T[j + 1].index;
-				T[j + 1].index = temp;
-				// меняем элементы first
-				temp1 = T[j].first;
-				T[j].first = T[j + 1].first;
-				T[j + 1].first = temp1;
-				// меняем элементы last
-				temp2 = T[j].last;
-				T[j].last = T[j + 1].last;
-				T[j + 1].last = temp2;
-				// меняем элементы three 
-				temp3 = T[j].three;
-				T[j].three = T[j + 1].three;
-				T[j + 1].three = temp3;
-				cout << T[i].index << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
-
-			}
-
-		// bruh moment перестановок
-	}
-
+	// за индекс отвечает сама строка таблицы
+	for (int i = 0; i < 20; i++)
+		cout << "  " << i << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
+	// создать еще одну таблицу, в которой номер строки кочует в индекс
+	int memo = 0;
 	int count = 0;
-	for (int i = 0; i < N; i++) {
-		if (T[i].first != 0 || T[i].last || 0 && T[i].three || 0)
-			count++;
+	for (int i = memo; i < 20; i++){
+		for (int j = memo; j < 20; j++) {
+			if (T[j].first != 0 || T[j].last != 0 || T[j].three != 0) {
+				Z[i].index = j;
+				Z[i].first = T[j].first;
+				Z[i].last = T[j].last;
+				Z[i].three = T[j].three;
+				memo++;
+				count++;
+				break;
+			} 
+		}
 	}
-	for (int i = 0; i < N; i++)
-		if (T[i].first != 0 || T[i].last || 0 && T[i].three || 0)
-			cout << "  " << T[i].index << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
-
-
-
-	/// 5 ЛАБА CONFERDED
-	cout << "Подсчет по проценту первых мест" << endl;
-	QuickSort(0, N - 1, T);
-
-	for (int i = 0; i < count; i++)
-		cout << "  " << T[i].index << "  " << T[i].first << "  " << T[i].last << "  " << T[i].three << endl;
-
+	Z[count].index = 0; Z[count].first = 0; Z[count].last = 0; Z[count].three = 0;
+	for (int i = 0; i < count - 1; i++)
+		cout << "  " <<Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
+	// входные данные готовы, а теперь хоть на Марс.
+	//qs(Z, 0, count);
+	ShellSort(count - 1, Z);
+	for (int i = 0; i < count - 1; i++)
+		cout << "  " << Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
+	// входные данные готовы, а теперь хоть на Марс.
 	return 0;
 }
-	
+
