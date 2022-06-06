@@ -6,6 +6,7 @@ using namespace std;
 
 struct table {
 	int index = NULL;
+	float tmp = NULL; // к этой штуке нужно подвязать весь столбец first;
 	float first = NULL;
 	float last = NULL;
 	float three = NULL;
@@ -84,8 +85,8 @@ void qs(table* s_arr, int f, int l) // таблица не входит(((
 		int left = f, right = l, middle = s_arr[(left + right) / 2].first;
 		do
 		{
-			while (s_arr[left].first < middle) left++;
-			while (s_arr[right].first > middle) right--;
+			while (s_arr[left].first > middle) left++;
+			while (s_arr[right].first < middle) right--;
 			if (left <= right)
 			{
 				int tmp = s_arr[left].first;
@@ -104,17 +105,16 @@ void ShellSort(int n, table* mass)
 {
 	int i, j, step;
 	int tmp;
-	for (step = n / 9; step > 0; step /= 9)
+	for (step = n / 3; step > 0; step /= 3)
 		for (i = step; i < n; i++)
 		{
 			tmp = mass[i].first;
 			for (j = i; j >= step; j -= step)
 			{
 				if (tmp > mass[j - step].first) {
-					//mass[j].index = mass[j - step].index;
+					mass[j].index = mass[j - step].index;
 					mass[j].first = mass[j - step].first;
-					//mass[j].last = mass[j - step].last;
-					//mass[j].three = mass[j - step].three;
+					mass[j].last = mass[j - step].last;
 					// индексация не работает((((((
 				}
 				else
@@ -124,14 +124,15 @@ void ShellSort(int n, table* mass)
 		}
 }
 
-void pyramide (table* a, int i, int j) { //массонский образ жизни
+/*
+void pyramide (table* a, int i, int j) {
 	int max = i;
 	do {
 		t = max; lt = 2 * t + 1; rt = 2 * (t + 1);
 		if (lt =< j)
 			if (a[i].first > a[i].first max (????)).....................................................................................................................
 	}
-}
+}*/
 
 int main() {
 	const int N = 100; // размерность таблицы
@@ -159,28 +160,29 @@ int main() {
 	// создать еще одну таблицу, в которой номер строки кочует в индекс
 	int memo = 0;
 	int count = 0;
-	for (int i = memo; i < 20; i++){
-		for (int j = memo; j < 20; j++) {
+	for (int i = 0; i < 10; i++){
+		for (int j = memo; j <= 10; j++) {
 			if (T[j].first != 0 || T[j].last != 0 || T[j].three != 0) {
 				Z[i].index = j;
 				Z[i].first = T[j].first;
 				Z[i].last = T[j].last;
 				Z[i].three = T[j].three;
-				memo++;
+				memo = j+1;
 				count++;
 				break;
 			} 
 		}
 	}
-	Z[count].index = 0; Z[count].first = 0; Z[count].last = 0; Z[count].three = 0;
-	for (int i = 0; i < count - 1; i++)
+	Z[count].index = 0; Z[count].first = 0; Z[count].last = 0; Z[count].three = 0; // обнуляем
+	cout << "Новая таблица" << endl;
+	for (int i = 0; i < count; i++)
 		cout << "  " <<Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
 	// входные данные готовы, а теперь хоть на Марс.
 	//qs(Z, 0, count);
-	ShellSort(count - 1, Z);
-	for (int i = 0; i < count - 1; i++)
+	cout << "Сортировка Шелла" << endl;
+	 ShellSort(count - 1, Z);
+	for (int i = 0; i < count ; i++)
 		cout << "  " << Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
 	// входные данные готовы, а теперь хоть на Марс.
 	return 0;
 }
-
