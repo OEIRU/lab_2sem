@@ -105,6 +105,7 @@ void ShellSort(int n, table* mass)
 {
 	int i, j, step;
 	int tmp;
+
 	for (step = n / 3; step > 0; step /= 3)
 		for (i = step; i < n; i++)
 		{
@@ -124,15 +125,49 @@ void ShellSort(int n, table* mass)
 		}
 }
 
-/*
-void pyramide (table* a, int i, int j) {
-	int max = i;
-	do {
-		t = max; lt = 2 * t + 1; rt = 2 * (t + 1);
-		if (lt =< j)
-			if (a[i].first > a[i].first max (????)).....................................................................................................................
+void Delete(table* a, int L, int R, int* ri, int* rj) // в таблице а сортируемая часть от индекса L до индекса R
+{
+	table x;
+	table c;
+	x = a[(L + R) / 2]; // выбрали срединный элемент как делящий элемент
+	int i = L, j = R;
+	while (i <= j)
+	{
+		while (a[i].first < x.first) i++; // слева от х находим элемент >= х
+		while (a[j].first > x.first) j--; // справа от х находим элемент <= х
+		if (i <= j) // пока индексы не встретились
+		{
+			c = a[i]; a[i] = a[j]; a[j] = c; i++; j--;
+		} // меняем местами ai и aj , и продолжаем просмотр
 	}
-}*/
+	*ri = i; *rj = j; // возвращаем индексы, по которым поделилась таблица
+}
+
+void Quicksort(table* a, int L, int R) // в таблице а сортируемая часть от индекса L до индекса R
+{
+	if (R - L > 3) // если элементов больше порогового значения
+	{
+		Delete(a, L, R, &i, &j); // делим часть таблицы от индекса L до индекса R на две части
+		if (L < j) Quicksort(a, L, j); //если в левой части больше одного элемента, сортируем ее
+		if (i < R) Quicksort(a, i, R); //если в правой части больше одного элемента, сортируем ее
+	}
+	else {
+		{ for (i = 1; i < Z.first; i++) // i – номер очередного элемента неупорядоченной части таблицы
+		{
+			x = T.elemi; // сохранили очередной элемент неупорядоченной части таблицы в х
+
+			c = Z.first; // сохранили его ключ в с
+			j = i - 1; // j – номер последнего элемента упорядоченной части таблицы
+
+			while (j >= 0 && Z.first > c) //пока не нашли место для элемента х
+			{
+				T.elemj + 1 = T.elemj; j = j - 1;
+			} //сдвигаем элемент T.elemj
+			Z.first + 1 = x;
+		} //на освобожденное место ставим х
+		}
+	}
+}
 
 int main() {
 	const int N = 100; // размерность таблицы
@@ -160,29 +195,62 @@ int main() {
 	// создать еще одну таблицу, в которой номер строки кочует в индекс
 	int memo = 0;
 	int count = 0;
-	for (int i = 0; i < 10; i++){
+	for (int i = 0; i < 10; i++) {
 		for (int j = memo; j <= 10; j++) {
 			if (T[j].first != 0 || T[j].last != 0 || T[j].three != 0) {
 				Z[i].index = j;
 				Z[i].first = T[j].first;
 				Z[i].last = T[j].last;
 				Z[i].three = T[j].three;
-				memo = j+1;
+				memo = j + 1;
 				count++;
 				break;
-			} 
+			}
 		}
 	}
 	Z[count].index = 0; Z[count].first = 0; Z[count].last = 0; Z[count].three = 0; // обнуляем
 	cout << "Новая таблица" << endl;
 	for (int i = 0; i < count; i++)
-		cout << "  " <<Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
-	// входные данные готовы, а теперь хоть на Марс.
-	//qs(Z, 0, count);
-	cout << "Сортировка Шелла" << endl;
-	 ShellSort(count - 1, Z);
-	for (int i = 0; i < count ; i++)
 		cout << "  " << Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
 	// входные данные готовы, а теперь хоть на Марс.
+	//qs(Z, 0, count);
+	// cout << "Сортировка Шелла" << endl;
+	// ShellSort(count - 1, Z);
+	cout << "A" << endl;
+	i = 0;
+	int s = 0;
+	int h[10];
+	h[s] = 1;
+	int n = count, m, k, a, j;
+	table x;
+	while (h[s] <= n / 9) {
+		s += 1;
+		h[s] = 3 * h[s - 1] + 1;
+	}
+
+	for (m = s; m >= 0; m--) {
+		for (k = 0; k < h[m]; k++) {
+			i - h[m] + k;
+			while (i <= n - 1) {
+				x = Z[i]; j = i - h[m];
+				while (j >= 0 && x.first > Z[j].first) {
+					Z[j + h[m]] = Z[j];
+					j = j - h[m];
+				}
+				Z[j + h[m]] = x; i += h[m];
+			}
+		}
+	}
+	for (int i = 0; i < count; i++)
+		cout << "  " << Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
+	// входные данные готовы, а теперь хоть на Марс.
+
+	cout << "A2" << endl;
+	Quicksort(Z, 0, count);
+	for (int i = 0; i < count; i++)
+		cout << "  " << Z[i].index << "  " << Z[i].first << "  " << Z[i].last << "  " << Z[i].three << endl;
+	// НА МАРС
+
+
 	return 0;
 }
